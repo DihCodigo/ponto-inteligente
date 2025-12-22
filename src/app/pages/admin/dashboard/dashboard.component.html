@@ -1,0 +1,50 @@
+<div class="min-h-screen bg-gray-900 text-white p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <h1 class="text-2xl font-bold text-center">
+      💼 Painel do Administrador
+    </h1>
+
+    <div *ngIf="!horasExtras.length" class="text-center text-gray-400">
+      Nenhuma solicitação de hora extra.
+    </div>
+
+    <div
+      *ngFor="let h of horasExtras"
+      class="bg-gray-800 p-4 rounded space-y-2">
+
+      <p>
+        <strong>Usuário:</strong> {{ h.emailUsuario }}
+      </p>
+
+      <p>
+        <strong>Motivo:</strong> {{ h.motivo }}
+      </p>
+
+      <p>
+        <strong>Status:</strong> {{ h.status }}
+      </p>
+
+      <p *ngIf="h.iniciadaEm">
+        <strong>Início:</strong>
+        {{ h.iniciadaEm | date:'HH:mm:ss' }}
+      </p>
+
+      <div class="flex gap-2 mt-3" *ngIf="h.status === 'PENDENTE'">
+        <button
+          class="btn bg-green-600"
+          (click)="aprovar(h)">
+          Aprovar
+        </button>
+
+        <button
+          class="btn bg-red-600"
+          (click)="reprovar(h)">
+          Reprovar
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

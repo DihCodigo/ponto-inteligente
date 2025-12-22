@@ -1,0 +1,91 @@
+<div class="min-h-screen bg-gray-900 text-white p-6">
+  <div class="max-w-3xl mx-auto space-y-6">
+
+    <h1 class="text-2xl font-bold text-center">
+      ⏱️ Ponto Inteligente
+    </h1>
+
+    <!-- REGISTRO DE PONTO -->
+    <div class="bg-gray-800 p-4 rounded space-y-3">
+      <h2 class="font-semibold">Registro de Ponto</h2>
+
+      <div class="flex flex-wrap gap-2">
+        <button class="btn" (click)="registrarEntrada()" [disabled]="ponto.entrada">
+          Entrada
+        </button>
+
+        <button class="btn" (click)="registrarSaidaAlmoco()" [disabled]="!ponto.entrada || ponto.saidaAlmoco">
+          Saída Almoço
+        </button>
+
+        <button class="btn" (click)="registrarVoltaAlmoco()" [disabled]="!ponto.saidaAlmoco || ponto.voltaAlmoco">
+          Volta Almoço
+        </button>
+
+        <button class="btn" (click)="registrarSaidaFinal()" [disabled]="!ponto.voltaAlmoco || ponto.saidaFinal">
+          Saída Final
+        </button>
+      </div>
+    </div>
+
+    <!-- RESUMO DO DIA -->
+    <div class="bg-gray-800 p-4 rounded text-sm">
+      <h3 class="font-semibold mb-2">Resumo do Dia</h3>
+
+      <p *ngIf="ponto.entrada">
+        <strong>Entrada:</strong> {{ ponto.entrada | date:'HH:mm:ss' }}
+      </p>
+
+      <p *ngIf="ponto.saidaAlmoco">
+        <strong>Saída Almoço:</strong> {{ ponto.saidaAlmoco | date:'HH:mm:ss' }}
+      </p>
+
+      <p *ngIf="ponto.voltaAlmoco">
+        <strong>Volta Almoço:</strong> {{ ponto.voltaAlmoco | date:'HH:mm:ss' }}
+      </p>
+
+      <p *ngIf="ponto.saidaFinal">
+        <strong>Saída Final:</strong> {{ ponto.saidaFinal | date:'HH:mm:ss' }}
+      </p>
+    </div>
+
+    <!-- BOT DE HORA EXTRA -->
+    <div class="bg-gray-800 p-4 rounded">
+      <h2 class="font-semibold mb-2">🤖 Bot de Hora Extra</h2>
+
+      <button
+        class="btn bg-purple-600"
+        (click)="solicitarHoraExtra()"
+        [disabled]="!podeSolicitarHoraExtra()">
+        Solicitar Hora Extra
+      </button>
+
+      <!-- Hora extra ativa -->
+      <div *ngIf="horaExtraAtiva" class="mt-4 bg-gray-700 p-3 rounded">
+        <p><strong>Status:</strong> {{ horaExtraAtiva?.status }}</p>
+        <p><strong>Motivo:</strong> {{ horaExtraAtiva?.motivo }}</p>
+
+        <button
+          class="btn bg-red-600 mt-2"
+          (click)="encerrarHoraExtra(horaExtraAtiva!)">
+          Encerrar Hora Extra
+        </button>
+      </div>
+
+      <!-- Histórico -->
+      <div *ngIf="horasExtras.length" class="mt-4">
+        <h3 class="font-semibold mb-2">Histórico do Dia</h3>
+
+        <ul class="space-y-2">
+          <li *ngFor="let h of horasExtras" class="bg-gray-700 p-2 rounded text-sm">
+            <p><strong>Motivo:</strong> {{ h.motivo }}</p>
+            <p><strong>Status:</strong> {{ h.status }}</p>
+            <p *ngIf="h.iniciadaEm">Início: {{ h.iniciadaEm | date:'HH:mm:ss' }}</p>
+            <p *ngIf="h.encerradaEm">Fim: {{ h.encerradaEm | date:'HH:mm:ss' }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>

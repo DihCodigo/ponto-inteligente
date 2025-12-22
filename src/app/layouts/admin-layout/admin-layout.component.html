@@ -1,0 +1,17 @@
+<div class="min-h-screen flex bg-gray-900 text-gray-100">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 p-4">
+    <h2 class="text-lg font-bold mb-6">Admin</h2>
+
+    <nav class="space-y-2">
+      <a class="block hover:text-blue-400" routerLink="/admin">Dashboard</a>
+      <a class="block hover:text-blue-400" routerLink="/admin/funcionarios">Funcionários</a>
+      <a class="block hover:text-blue-400" routerLink="/admin/solicitacoes">Solicitações</a>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main class="flex-1 p-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>
