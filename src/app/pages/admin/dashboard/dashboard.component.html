@@ -1,49 +1,124 @@
 <div class="min-h-screen bg-gray-900 text-white p-6">
-  <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-5xl mx-auto space-y-6">
 
-    <h1 class="text-2xl font-bold text-center">
-      💼 Painel do Administrador
-    </h1>
-
-    <div *ngIf="!horasExtras.length" class="text-center text-gray-400">
-      Nenhuma solicitação de hora extra.
+    <!-- TOPO -->
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Painel do Administrador</h1>
+      <button
+        class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-semibold"
+        (click)="logout()">
+        Sair
+      </button>
     </div>
 
-    <div
-      *ngFor="let h of horasExtras"
-      class="bg-gray-800 p-4 rounded space-y-2">
+    <!-- FUNCIONÁRIOS TRABALHANDO -->
+    <div class="bg-gray-800 p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-4">
+        Funcionários Trabalhando Agora
+      </h2>
 
-      <p>
-        <strong>Usuário:</strong> {{ h.emailUsuario }}
-      </p>
-
-      <p>
-        <strong>Motivo:</strong> {{ h.motivo }}
-      </p>
-
-      <p>
-        <strong>Status:</strong> {{ h.status }}
-      </p>
-
-      <p *ngIf="h.iniciadaEm">
-        <strong>Início:</strong>
-        {{ h.iniciadaEm | date:'HH:mm:ss' }}
-      </p>
-
-      <div class="flex gap-2 mt-3" *ngIf="h.status === 'PENDENTE'">
-        <button
-          class="btn bg-green-600"
-          (click)="aprovar(h)">
-          Aprovar
-        </button>
-
-        <button
-          class="btn bg-red-600"
-          (click)="reprovar(h)">
-          Reprovar
-        </button>
+      <div *ngIf="!funcionariosTrabalhando.length" class="text-gray-400 italic">
+        Nenhum funcionário trabalhando no momento.
       </div>
 
+      <ul class="space-y-3">
+        <li
+          *ngFor="let f of funcionariosTrabalhando"
+          class="flex justify-between items-center bg-gray-700 p-4 rounded border border-gray-600">
+
+          <!-- INFO USUÁRIO -->
+          <div class="space-y-1">
+            <p class="font-semibold text-white">
+              {{ f.email }}
+            </p>
+
+            <p class="text-xs text-gray-400">
+              Entrada:
+              <span class="font-mono text-gray-300">
+                {{ f.ponto.entrada | date:'HH:mm:ss' }}
+              </span>
+            </p>
+
+            <!-- STATUS -->
+
+            <!-- EM ALMOÇO -->
+            <span
+              *ngIf="f.ponto.saidaAlmoco && !f.ponto.voltaAlmoco"
+              class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
+                     bg-orange-500/20 text-orange-400">
+              🍽️ Em almoço
+            </span>
+
+            <!-- EM PAUSA -->
+            <span
+              *ngIf="f.ponto.pausas && f.ponto.pausas.length && !f.ponto.pausas[f.ponto.pausas.length - 1].fim"
+              class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
+                     bg-yellow-500/20 text-yellow-400">
+              ⏸️ Em pausa
+            </span>
+
+            <!-- TRABALHANDO -->
+            <span
+              *ngIf="
+                !f.ponto.saidaAlmoco &&
+                (!f.ponto.pausas || f.ponto.pausas.length === 0 ||
+                f.ponto.pausas[f.ponto.pausas.length - 1].fim)
+              "
+              class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
+                     bg-green-500/20 text-green-400">
+              🟢 Trabalhando
+            </span>
+          </div>
+
+          <!-- TEMPO -->
+          <div class="text-right">
+            <p class="text-xs text-gray-400">
+              Tempo Trabalhado
+            </p>
+            <p class="text-xl font-mono text-green-400">
+              {{ tempoTrabalhando(f.ponto) }}
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- HORAS EXTRAS -->
+    <div class="bg-gray-800 p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-4">
+        Solicitações de Hora Extra
+      </h2>
+
+      <div *ngIf="!horasExtras.length" class="text-gray-400 italic">
+        Nenhuma solicitação pendente.
+      </div>
+
+      <div
+        *ngFor="let h of horasExtras"
+        class="bg-gray-700 p-4 rounded mb-3 border border-gray-600">
+
+        <p class="text-sm">
+          <strong>Usuário:</strong> {{ h.emailUsuario }}
+        </p>
+
+        <p class="text-sm">
+          <strong>Motivo:</strong> {{ h.motivo }}
+        </p>
+
+        <div class="flex gap-2 mt-3">
+          <button
+            class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm font-semibold"
+            (click)="aprovar(h)">
+            Aprovar
+          </button>
+
+          <button
+            class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm font-semibold"
+            (click)="reprovar(h)">
+            Reprovar
+          </button>
+        </div>
+      </div>
     </div>
 
   </div>

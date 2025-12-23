@@ -7,6 +7,10 @@ export class PontoService {
   private PONTOS_KEY = 'pontos_por_usuario';
   private HORAS_EXTRA_KEY = 'horas_extra_por_usuario';
 
+  /* =====================
+     PONTOS
+  ====================== */
+
   getPonto(email: string): Ponto {
     const data = this.getAllPontos();
     return data[email] || {};
@@ -17,6 +21,19 @@ export class PontoService {
     data[email] = ponto;
     localStorage.setItem(this.PONTOS_KEY, JSON.stringify(data));
   }
+
+  /** 🔥 MÉTODO NOVO (para ADMIN) */
+  getTodosPontos(): Record<string, Ponto> {
+    return this.getAllPontos();
+  }
+
+  private getAllPontos(): Record<string, Ponto> {
+    return JSON.parse(localStorage.getItem(this.PONTOS_KEY) || '{}');
+  }
+
+  /* =====================
+     HORAS EXTRAS
+  ====================== */
 
   getHorasExtras(email: string): HoraExtra[] {
     const data = this.getAllHorasExtras();
@@ -34,31 +51,27 @@ export class PontoService {
     return Object.values(data).flat();
   }
 
-  private getAllPontos(): Record<string, Ponto> {
-    return JSON.parse(localStorage.getItem(this.PONTOS_KEY) || '{}');
+  atualizarHoraExtra(hora: HoraExtra): void {
+    const data = this.getAllHorasExtras();
+    const horasUsuario = data[hora.emailUsuario] || [];
+
+    const index = horasUsuario.findIndex(
+      h => h.motivo === hora.motivo && h.status !== 'ENCERRADA'
+    );
+
+    if (index !== -1) {
+      horasUsuario[index] = hora;
+      data[hora.emailUsuario] = horasUsuario;
+      localStorage.setItem(this.HORAS_EXTRA_KEY, JSON.stringify(data));
+    }
   }
 
   private getAllHorasExtras(): Record<string, HoraExtra[]> {
     return JSON.parse(localStorage.getItem(this.HORAS_EXTRA_KEY) || '{}');
   }
 
-  atualizarHoraExtra(hora: HoraExtra): void {
-  const data = this.getAllHorasExtras();
-  const horasUsuario = data[hora.emailUsuario] || [];
-
-  const index = horasUsuario.findIndex(
-    h =>
-      h.motivo === hora.motivo &&
-      h.status !== 'ENCERRADA'
-  );
-
-  if (index !== -1) {
-    horasUsuario[index] = hora;
-    data[hora.emailUsuario] = horasUsuario;
-    localStorage.setItem(this.HORAS_EXTRA_KEY, JSON.stringify(data));
+  getAllPontosPublic(): Record<string, Ponto> {
+    return JSON.parse(localStorage.getItem(this.PONTOS_KEY) || '{}');
   }
-}
 
 }
-
-

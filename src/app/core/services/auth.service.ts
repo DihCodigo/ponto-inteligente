@@ -16,7 +16,11 @@ export class AuthService {
   login(email: string, password: string): boolean {
   if (
     (email === 'admin@empresa.com' && password !== 'admin') ||
-    (email === 'user@empresa.com' && password !== '1234')
+    (email === 'user@empresa.com' && password !== '1234') ||
+    (email === 'user1@empresa.com' && password !== '1234') ||
+    (email === 'user2@empresa.com' && password !== '1234') ||
+    (email === 'user3@empresa.com' && password !== '1234')||
+    (email === 'user4@empresa.com' && password !== '1234')
   ) {
     return false;
   }

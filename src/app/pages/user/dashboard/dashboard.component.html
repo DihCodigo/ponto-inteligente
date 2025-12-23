@@ -1,62 +1,85 @@
 <div class="min-h-screen bg-gray-900 text-white p-6">
   <div class="max-w-3xl mx-auto space-y-6">
 
-    <h1 class="text-2xl font-bold text-center">
-      ⏱️ Ponto Inteligente
-    </h1>
+    <!-- TOPO -->
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Ponto Inteligente</h1>
+      <button class="bg-red-600 px-4 py-2 rounded" (click)="logout()">Sair</button>
+    </div>
 
     <!-- REGISTRO DE PONTO -->
-    <div class="bg-gray-800 p-4 rounded space-y-3">
+    <div class="bg-gray-800 p-4 space-y-3 rounded-sm">
       <h2 class="font-semibold">Registro de Ponto</h2>
 
       <div class="flex flex-wrap gap-2">
-        <button class="btn" (click)="registrarEntrada()" [disabled]="ponto.entrada">
+        <button class="px-4 py-2 bg-blue-600 rounded" (click)="registrarEntrada()" [disabled]="ponto.entrada">
           Entrada
         </button>
 
-        <button class="btn" (click)="registrarSaidaAlmoco()" [disabled]="!ponto.entrada || ponto.saidaAlmoco">
+        <button class="px-4 py-2 bg-yellow-600 rounded" (click)="registrarSaidaAlmoco()"
+          [disabled]="!ponto.entrada || ponto.saidaAlmoco">
           Saída Almoço
         </button>
 
-        <button class="btn" (click)="registrarVoltaAlmoco()" [disabled]="!ponto.saidaAlmoco || ponto.voltaAlmoco">
+        <button class="px-4 py-2 bg-orange-600 rounded" (click)="registrarVoltaAlmoco()"
+          [disabled]="!ponto.saidaAlmoco || ponto.voltaAlmoco">
           Volta Almoço
         </button>
 
-        <button class="btn" (click)="registrarSaidaFinal()" [disabled]="!ponto.voltaAlmoco || ponto.saidaFinal">
+        <button class="px-4 py-2 bg-green-600 rounded" (click)="registrarSaidaFinal()"
+          [disabled]="!ponto.voltaAlmoco || ponto.saidaFinal">
           Saída Final
         </button>
       </div>
     </div>
 
-    <!-- RESUMO DO DIA -->
-    <div class="bg-gray-800 p-4 rounded text-sm">
-      <h3 class="font-semibold mb-2">Resumo do Dia</h3>
+    <!-- PAUSA DE TRABALHO -->
+    <div class="bg-gray-800 p-4 rounded-sm">
+      <h2 class="font-semibold mb-2"> Pausa de Trabalho</h2>
 
-      <p *ngIf="ponto.entrada">
-        <strong>Entrada:</strong> {{ ponto.entrada | date:'HH:mm:ss' }}
-      </p>
+      <button *ngIf="!estaEmPausa()" class="px-4 py-2 bg-gray-300 text-blue-950 font-bold rounded-sm"
+        (click)="pausarTrabalho()">
+        ⏸️ Pausar Trabalho
+      </button>
 
-      <p *ngIf="ponto.saidaAlmoco">
-        <strong>Saída Almoço:</strong> {{ ponto.saidaAlmoco | date:'HH:mm:ss' }}
-      </p>
-
-      <p *ngIf="ponto.voltaAlmoco">
-        <strong>Volta Almoço:</strong> {{ ponto.voltaAlmoco | date:'HH:mm:ss' }}
-      </p>
-
-      <p *ngIf="ponto.saidaFinal">
-        <strong>Saída Final:</strong> {{ ponto.saidaFinal | date:'HH:mm:ss' }}
-      </p>
+      <button *ngIf="estaEmPausa()" class="px-4 py-2 bg-green-600 rounded-sm" (click)="retomarTrabalho()">
+        ▶️ Retomar Trabalho
+      </button>
     </div>
 
-    <!-- BOT DE HORA EXTRA -->
-    <div class="bg-gray-800 p-4 rounded">
-      <h2 class="font-semibold mb-2">🤖 Bot de Hora Extra</h2>
+    <!-- RESUMO DO DIA -->
+    <div class="bg-slate-900 border border-slate-800 rounded-sm p-5">
+      <h3 class="text-xl font-semibold mb-4">Resumo do Dia</h3>
 
-      <button
-        class="btn bg-purple-600"
-        (click)="solicitarHoraExtra()"
-        [disabled]="!podeSolicitarHoraExtra()">
+      <div class="space-y-2 text-sm">
+        <div *ngIf="ponto.entrada" class="flex justify-between bg-slate-800 p-2 rounded">
+          <span>Entrada</span>
+          <span class="text-blue-400">{{ ponto.entrada | date:'HH:mm:ss' }}</span>
+        </div>
+
+        <div *ngIf="ponto.saidaAlmoco" class="flex justify-between bg-slate-800 p-2 rounded">
+          <span>Saída Almoço</span>
+          <span class="text-yellow-400">{{ ponto.saidaAlmoco | date:'HH:mm:ss' }}</span>
+        </div>
+
+        <div *ngIf="ponto.voltaAlmoco" class="flex justify-between bg-slate-800 p-2 rounded">
+          <span>Volta Almoço</span>
+          <span class="text-orange-400">{{ ponto.voltaAlmoco | date:'HH:mm:ss' }}</span>
+        </div>
+
+        <div *ngIf="ponto.saidaFinal" class="flex justify-between bg-slate-800 p-2 rounded">
+          <span>Saída Final</span>
+          <span class="text-green-400">{{ ponto.saidaFinal | date:'HH:mm:ss' }}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- BOT DE HORA EXTRA -->
+    <div class="bg-gray-800 p-4 rounded-sm">
+      <h2 class="font-semibold mb-2">Solicitar Hora Extra</h2>
+
+      <button class="btn bg-purple-600" (click)="solicitarHoraExtra()" [disabled]="!podeSolicitarHoraExtra()">
         Solicitar Hora Extra
       </button>
 
@@ -65,23 +88,56 @@
         <p><strong>Status:</strong> {{ horaExtraAtiva?.status }}</p>
         <p><strong>Motivo:</strong> {{ horaExtraAtiva?.motivo }}</p>
 
-        <button
-          class="btn bg-red-600 mt-2"
-          (click)="encerrarHoraExtra(horaExtraAtiva!)">
+        <button class="btn bg-red-600 mt-2" (click)="encerrarHoraExtra(horaExtraAtiva!)">
           Encerrar Hora Extra
         </button>
       </div>
 
-      <!-- Histórico -->
-      <div *ngIf="horasExtras.length" class="mt-4">
-        <h3 class="font-semibold mb-2">Histórico do Dia</h3>
+      <!-- HISTÓRICO -->
+      <div *ngIf="horasExtras.length" class="mt-6">
 
-        <ul class="space-y-2">
-          <li *ngFor="let h of horasExtras" class="bg-gray-700 p-2 rounded text-sm">
-            <p><strong>Motivo:</strong> {{ h.motivo }}</p>
-            <p><strong>Status:</strong> {{ h.status }}</p>
-            <p *ngIf="h.iniciadaEm">Início: {{ h.iniciadaEm | date:'HH:mm:ss' }}</p>
-            <p *ngIf="h.encerradaEm">Fim: {{ h.encerradaEm | date:'HH:mm:ss' }}</p>
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          Histórico do Dia
+        </h3>
+
+        <ul class="space-y-3">
+
+          <li *ngFor="let h of horasExtras" class="bg-slate-900 border border-slate-800 rounded-sm p-4 shadow">
+
+            <div class="flex justify-between items-start gap-4">
+
+              <div class="space-y-1">
+                <p class="text-sm text-slate-300">
+                  <span class="font-semibold text-white">Motivo:</span>
+                  {{ h.motivo }}
+                </p>
+
+                <div class="flex gap-4 text-xs text-slate-400">
+                  <span *ngIf="h.iniciadaEm">
+                    Início:
+                    <span class="font-mono text-green-400">
+                      {{ h.iniciadaEm | date:'HH:mm:ss' }}
+                    </span>
+                  </span>
+
+                  <span *ngIf="h.encerradaEm">
+                    Fim:
+                    <span class="font-mono text-red-400">
+                      {{ h.encerradaEm | date:'HH:mm:ss' }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="{
+            'bg-yellow-500/20 text-yellow-400': h.status === 'PENDENTE',
+            'bg-green-500/20 text-green-400': h.status === 'APROVADA',
+            'bg-red-500/20 text-red-400': h.status === 'REPROVADA',
+            'bg-slate-500/20 text-slate-300': h.status === 'ENCERRADA'
+          }">
+                {{ h.status }}
+              </span>
+            </div>
           </li>
         </ul>
       </div>

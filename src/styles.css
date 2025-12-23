@@ -2,3 +2,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===== BOTÕES ===== */
+.btn {
+  padding: 10px 16px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-success {
+  background-color: #16a34a;
+  color: #fff;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.btn-warning {
+  background-color: #d97706;
+  color: #fff;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: #b45309;
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: #fff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+/* ===== TOPO ===== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+

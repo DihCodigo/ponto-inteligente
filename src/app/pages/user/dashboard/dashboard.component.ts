@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { PontoService } from '../../../core/services/ponto.service';
-import { Ponto } from '../../../core/models/ponto.model';
+import { Ponto, Pausa } from '../../../core/models/ponto.model';
 import { HoraExtra } from '../../../core/models/hora-extra.model';
 
 @Component({
@@ -19,35 +20,70 @@ export class UserDashboardComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private pontoService: PontoService
+    private pontoService: PontoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.email = this.auth.getUser()!.email;
     this.ponto = this.pontoService.getPonto(this.email);
+
+    if (!this.ponto.pausas) {
+      this.ponto.pausas = [];
+    }
+
     this.horasExtras = this.pontoService.getHorasExtras(this.email);
     this.horaExtraAtiva =
       this.horasExtras.find(h => h.status === 'APROVADA') || null;
   }
 
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+
+  salvar() {
+    this.pontoService.salvarPonto(this.email, this.ponto);
+  }
+
   registrarEntrada() {
     this.ponto.entrada = new Date();
-    this.pontoService.salvarPonto(this.email, this.ponto);
+    this.salvar();
   }
 
   registrarSaidaAlmoco() {
     this.ponto.saidaAlmoco = new Date();
-    this.pontoService.salvarPonto(this.email, this.ponto);
+    this.salvar();
   }
 
   registrarVoltaAlmoco() {
     this.ponto.voltaAlmoco = new Date();
-    this.pontoService.salvarPonto(this.email, this.ponto);
+    this.salvar();
   }
 
   registrarSaidaFinal() {
     this.ponto.saidaFinal = new Date();
-    this.pontoService.salvarPonto(this.email, this.ponto);
+    this.salvar();
+  }
+
+  estaEmPausa(): boolean {
+    const ultima = this.ponto.pausas?.at(-1);
+    return !!ultima && !ultima.fim;
+  }
+
+  pausarTrabalho() {
+    this.ponto.pausas!.push({
+      inicio: new Date(),
+    });
+    this.salvar();
+  }
+
+  retomarTrabalho() {
+    const ultima = this.ponto.pausas?.at(-1);
+    if (ultima && !ultima.fim) {
+      ultima.fim = new Date();
+      this.salvar();
+    }
   }
 
   podeSolicitarHoraExtra(): boolean {
@@ -62,6 +98,7 @@ export class UserDashboardComponent implements OnInit {
       emailUsuario: this.email,
       motivo,
       status: 'PENDENTE',
+      iniciadaEm: new Date(),
     };
 
     this.horasExtras.push(hora);
