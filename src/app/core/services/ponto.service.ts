@@ -7,10 +7,6 @@ export class PontoService {
   private PONTOS_KEY = 'pontos_por_usuario';
   private HORAS_EXTRA_KEY = 'horas_extra_por_usuario';
 
-  /* =====================
-     PONTOS
-  ====================== */
-
   getPonto(email: string): Ponto {
     const data = this.getAllPontos();
     return data[email] || {};
@@ -22,7 +18,6 @@ export class PontoService {
     localStorage.setItem(this.PONTOS_KEY, JSON.stringify(data));
   }
 
-  /** 🔥 MÉTODO NOVO (para ADMIN) */
   getTodosPontos(): Record<string, Ponto> {
     return this.getAllPontos();
   }
@@ -30,10 +25,6 @@ export class PontoService {
   private getAllPontos(): Record<string, Ponto> {
     return JSON.parse(localStorage.getItem(this.PONTOS_KEY) || '{}');
   }
-
-  /* =====================
-     HORAS EXTRAS
-  ====================== */
 
   getHorasExtras(email: string): HoraExtra[] {
     const data = this.getAllHorasExtras();

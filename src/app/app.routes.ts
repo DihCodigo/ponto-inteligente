@@ -35,4 +35,11 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'login',
   },
+  {
+    path: 'banco-horas',
+    loadComponent: () =>
+    import('./pages/banco-horas/banco-horas.component')
+      .then(m => m.BancoHorasComponent)
+}
+
 ];
