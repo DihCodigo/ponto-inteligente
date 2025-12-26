@@ -10,6 +10,7 @@ export interface AuthUser {
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private STORAGE_KEY = 'ponto_user';
 

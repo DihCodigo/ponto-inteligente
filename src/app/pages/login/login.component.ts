@@ -24,7 +24,7 @@ export class LoginComponent {
     const sucesso = this.authService.login(this.email, this.password);
 
     if (!sucesso) {
-      this.erro = 'Email ou senha inválidos';
+      this.erro = '❌ Email ou senha inválidos ❌';
       return;
     }
 

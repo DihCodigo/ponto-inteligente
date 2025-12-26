@@ -1,0 +1,50 @@
+<div class="max-w-5xl mx-auto p-6 space-y-6 text-white">
+
+    <h1 class="text-2xl font-bold">Banco de Horas — {{ banco.mes }}</h1>
+
+    <div class="flex justify-end">
+        <button (click)="exportarCSV()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold text-sm">
+            Exportar CSV
+        </button>
+    </div>
+
+    <!-- SALDO TOTAL -->
+    <div class="p-4 rounded-xl text-center text-xl font-semibold" [ngClass]="{
+      'bg-green-600': banco.saldoTotalMinutos > 0,
+      'bg-red-600': banco.saldoTotalMinutos < 0,
+      'bg-gray-600': banco.saldoTotalMinutos === 0
+    }">
+        Saldo do mês:
+        {{ formatarMinutos(banco.saldoTotalMinutos) }}
+    </div>
+
+    <!-- TABELA -->
+    <div class="overflow-x-auto">
+        <table class="w-full border border-gray-700 rounded-lg">
+            <thead class="bg-gray-800">
+                <tr>
+                    <th class="p-3 text-left">Data</th>
+                    <th class="p-3">Trabalhado</th>
+                    <th class="p-3">Esperado</th>
+                    <th class="p-3">Saldo</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let d of banco.dias" class="border-t border-gray-700 text-center">
+                    <td class="p-2 text-left">{{ d.data }}</td>
+                    <td class="p-2">{{ formatarMinutos(d.minutosTrabalhados) }}</td>
+                    <td class="p-2">{{ formatarMinutos(d.minutosEsperados) }}</td>
+                    <td class="p-2 font-semibold" [ngClass]="{
+              'text-green-400': d.saldoMinutos > 0,
+              'text-red-400': d.saldoMinutos < 0,
+              'text-gray-300': d.saldoMinutos === 0
+            }">
+                        {{ formatarMinutos(d.saldoMinutos) }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

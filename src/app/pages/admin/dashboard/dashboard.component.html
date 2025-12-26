@@ -4,9 +4,7 @@
     <!-- TOPO -->
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold">Painel do Administrador</h1>
-      <button
-        class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-semibold"
-        (click)="logout()">
+      <button class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-semibold" (click)="logout()">
         Sair
       </button>
     </div>
@@ -22,8 +20,7 @@
       </div>
 
       <ul class="space-y-3">
-        <li
-          *ngFor="let f of funcionariosTrabalhando"
+        <li *ngFor="let f of funcionariosTrabalhando"
           class="flex justify-between items-center bg-gray-700 p-4 rounded border border-gray-600">
 
           <!-- INFO USUÁRIO -->
@@ -39,46 +36,57 @@
               </span>
             </p>
 
+            <p class="text-xs text-gray-400">
+              Carga diária:
+              <span class="font-mono text-gray-300">
+                {{ obterCargaHoraria(f.email) }}
+              </span>
+            </p>
+
+
             <!-- STATUS -->
 
             <!-- EM ALMOÇO -->
-            <span
-              *ngIf="f.ponto.saidaAlmoco && !f.ponto.voltaAlmoco"
-              class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
+            <span *ngIf="f.ponto.saidaAlmoco && !f.ponto.voltaAlmoco" class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
                      bg-orange-500/20 text-orange-400">
               🍽️ Em almoço
             </span>
 
             <!-- EM PAUSA -->
-            <span
-              *ngIf="f.ponto.pausas && f.ponto.pausas.length && !f.ponto.pausas[f.ponto.pausas.length - 1].fim"
+            <span *ngIf="f.ponto.pausas && f.ponto.pausas.length && !f.ponto.pausas[f.ponto.pausas.length - 1].fim"
               class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
                      bg-yellow-500/20 text-yellow-400">
               ⏸️ Em pausa
             </span>
 
             <!-- TRABALHANDO -->
-            <span
-              *ngIf="
+            <span *ngIf="
                 !f.ponto.saidaAlmoco &&
                 (!f.ponto.pausas || f.ponto.pausas.length === 0 ||
                 f.ponto.pausas[f.ponto.pausas.length - 1].fim)
-              "
-              class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
+              " class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
                      bg-green-500/20 text-green-400">
               🟢 Trabalhando
             </span>
           </div>
 
-          <!-- TEMPO -->
-          <div class="text-right">
-            <p class="text-xs text-gray-400">
-              Tempo Trabalhado
-            </p>
-            <p class="text-xl font-mono text-green-400">
-              {{ tempoTrabalhando(f.ponto) }}
-            </p>
+          <!-- TEMPO / AÇÕES -->
+          <div class="text-right space-y-2">
+            <div>
+              <p class="text-xs text-gray-400">
+                Tempo Trabalhado
+              </p>
+              <p class="text-xl font-mono text-green-400">
+                {{ tempoTrabalhando(f.ponto) }}
+              </p>
+            </div>
+
+            <button class="px-3 py-1 text-xs rounded bg-blue-600 hover:bg-blue-700 font-semibold"
+              (click)="definirCargaHoraria(f.email)">
+              ⚙️ Definir carga horária
+            </button>
           </div>
+
         </li>
       </ul>
     </div>
@@ -93,9 +101,7 @@
         Nenhuma solicitação pendente.
       </div>
 
-      <div
-        *ngFor="let h of horasExtras"
-        class="bg-gray-700 p-4 rounded mb-3 border border-gray-600">
+      <div *ngFor="let h of horasExtras" class="bg-gray-700 p-4 rounded mb-3 border border-gray-600">
 
         <p class="text-sm">
           <strong>Usuário:</strong> {{ h.emailUsuario }}
@@ -106,15 +112,11 @@
         </p>
 
         <div class="flex gap-2 mt-3">
-          <button
-            class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm font-semibold"
-            (click)="aprovar(h)">
+          <button class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm font-semibold" (click)="aprovar(h)">
             Aprovar
           </button>
 
-          <button
-            class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm font-semibold"
-            (click)="reprovar(h)">
+          <button class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm font-semibold" (click)="reprovar(h)">
             Reprovar
           </button>
         </div>
